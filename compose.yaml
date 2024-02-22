@@ -1,0 +1,16 @@
+services:
+  # app:
+  #   build: .
+  #   ports:
+  #     - 127.0.0.1:3000:3000
+  mysql:
+    image: mysql:8.3
+    volumes:
+      - mysql-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: very_secret_pwd
+      MYSQL_DATABASE: weather
+      MYSQL_USER: some_user
+      MYSQL_PASSWORD: some_user_pwd
+volumes:
+  mysql-data:
