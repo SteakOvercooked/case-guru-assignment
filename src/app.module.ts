@@ -5,6 +5,8 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
+import { UserModule } from "./user/user.module";
+import { AuthModule } from "./auth/auth.module";
 
 @Module({
   imports: [
@@ -13,10 +15,10 @@ import { AppService } from "./app.service";
         path.resolve(__dirname, "../.env"),
         path.resolve(__dirname, `../.app.${process.env.ENVIRONMENT}.env`),
       ],
+      isGlobal: true,
     }),
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => {
+      useFactory: (configService: ConfigService) => {
         const isDev = configService.getOrThrow("ENVIRONMENT") === "dev";
 
         return {
@@ -26,13 +28,15 @@ import { AppService } from "./app.service";
           username: configService.getOrThrow("MYSQL_USER"),
           password: configService.getOrThrow("MYSQL_PASSWORD"),
           database: configService.getOrThrow("MYSQL_DATABASE"),
-          entities: [],
+          autoLoadEntities: true,
           synchronize: isDev,
           dropSchema: isDev,
         };
       },
       inject: [ConfigService],
     }),
+    UserModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
