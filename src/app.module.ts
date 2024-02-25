@@ -2,11 +2,14 @@ import * as path from "path";
 import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
+import { JwtModule } from "@nestjs/jwt";
 
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { UserModule } from "./user/user.module";
 import { AuthModule } from "./auth/auth.module";
+import { WeatherModule } from "./weather/weather.module";
+import { ActionService } from "./action/action.service";
 
 @Module({
   imports: [
@@ -16,6 +19,16 @@ import { AuthModule } from "./auth/auth.module";
         path.resolve(__dirname, `../.app.${process.env.ENVIRONMENT}.env`),
       ],
       isGlobal: true,
+    }),
+    JwtModule.registerAsync({
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.getOrThrow("JWT_SECRET"),
+        signOptions: {
+          expiresIn: "5m",
+        },
+      }),
+      inject: [ConfigService],
+      global: true,
     }),
     TypeOrmModule.forRootAsync({
       useFactory: (configService: ConfigService) => {
@@ -37,8 +50,9 @@ import { AuthModule } from "./auth/auth.module";
     }),
     UserModule,
     AuthModule,
+    WeatherModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, ActionService],
 })
 export class AppModule {}
