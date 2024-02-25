@@ -1,0 +1,7 @@
+# compiled output
+/dist
+/node_modules
+/build
+
+# VS Code workspace settings
+.vscode
