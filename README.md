@@ -2,7 +2,7 @@
 
 ```
 git clone git@github.com:SteakOvercooked/case-guru-assignment.git
-cd case-guru-assignment.git
+cd case-guru-assignment
 docker compose -f compose.prod.yml up --build
 ```
 
