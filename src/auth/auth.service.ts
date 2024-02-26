@@ -13,12 +13,12 @@ export class AuthService {
   ) {}
 
   private async generateToken(user: User) {
-    return this.jwtService.signAsync({ sub: user.id });
+    return this.jwtService.signAsync({ sub: user.id() });
   }
 
   async signIn(login: string, password: string) {
     const user = await this.userService.getByLogin(login);
-    const hashedPassword = await bcrypt.hash(user.password, 10);
+    const hashedPassword = await bcrypt.hash(user.password(), 10);
     const isOk = await bcrypt.compare(password, hashedPassword);
     if (!isOk) {
       throw new UnauthorizedException("The password is invalid");
@@ -27,16 +27,17 @@ export class AuthService {
     const token = await this.generateToken(user);
     await this.userService.save(user);
 
-    return { fio: user.fio, token };
+    return { fio: user.fio(), token };
   }
 
   async signUp(login: string, password: string, fio: string) {
-    const user = await this.userService.create({ login, password, fio });
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = new User({ login, password: hashedPassword, fio });
     const token = await this.generateToken(user);
 
     user.apiToken = token;
     await this.userService.save(user);
 
-    return { fio: user.fio, token };
+    return { fio: user.fio(), token };
   }
 }

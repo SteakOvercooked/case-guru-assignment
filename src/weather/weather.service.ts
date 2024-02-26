@@ -1,12 +1,4 @@
-import {
-  BadRequestException,
-  ForbiddenException,
-  HttpStatus,
-  Injectable,
-  InternalServerErrorException,
-  ServiceUnavailableException,
-  UnauthorizedException,
-} from "@nestjs/common";
+import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 
 @Injectable()
@@ -27,19 +19,6 @@ export class WeatherService {
     );
     const body = await res.json();
 
-    if (!res.ok) {
-      switch (res.status) {
-        case HttpStatus.BAD_REQUEST:
-          throw new BadRequestException(body.error.message);
-        case HttpStatus.UNAUTHORIZED:
-          throw new UnauthorizedException(body.error.message);
-        case HttpStatus.FORBIDDEN:
-          throw new ForbiddenException(body.error.message);
-        default:
-          throw new ServiceUnavailableException();
-      }
-    }
-
-    return body;
+    return { body, code: res.status };
   }
 }

@@ -1,6 +1,9 @@
-import { IsString, Length } from "class-validator";
+import { IsString, IsUUID, Length } from "class-validator";
 
-export class CreateUserDTO {
+export class GuestUserDTO {
+  @IsUUID()
+  id: string;
+
   @Length(6, 64)
   @IsString()
   login: string;

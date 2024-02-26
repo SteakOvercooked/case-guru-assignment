@@ -10,7 +10,7 @@ import {
 
 import { AuthService } from "./auth.service";
 import { SignInDTO } from "./dto/signIn.dto";
-import { CreateUserDTO } from "../user/dto/create-user.dto";
+import { SignUpDTO } from "./dto/signUp.dto";
 
 @Controller("auth")
 export class AuthController {
@@ -26,7 +26,7 @@ export class AuthController {
   @UsePipes(new ValidationPipe())
   @HttpCode(HttpStatus.CREATED)
   @Post("signup")
-  async signUp(@Body() signUpDto: CreateUserDTO) {
+  async signUp(@Body() signUpDto: SignUpDTO) {
     return this.authService.signUp(
       signUpDto.login,
       signUpDto.password,

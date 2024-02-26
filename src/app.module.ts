@@ -9,7 +9,6 @@ import { AppService } from "./app.service";
 import { UserModule } from "./user/user.module";
 import { AuthModule } from "./auth/auth.module";
 import { WeatherModule } from "./weather/weather.module";
-import { ActionService } from "./action/action.service";
 
 @Module({
   imports: [
@@ -53,6 +52,6 @@ import { ActionService } from "./action/action.service";
     WeatherModule,
   ],
   controllers: [AppController],
-  providers: [AppService, ActionService],
+  providers: [AppService],
 })
 export class AppModule {}
