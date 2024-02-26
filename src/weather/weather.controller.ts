@@ -16,6 +16,7 @@ import {
 import { Repository } from "typeorm";
 import { Request } from "express";
 import { InjectRepository } from "@nestjs/typeorm";
+import { ApiOkResponse } from "@nestjs/swagger";
 
 import { GetCurrentDTO } from "./dto/get-current.dto";
 import { WeatherService } from "./weather.service";
@@ -29,6 +30,10 @@ export class WeatherController {
     @InjectRepository(Action) private actionRepository: Repository<Action>,
   ) {}
 
+  @ApiOkResponse({
+    description: `The provided params are valid and the weather is successfuly returned.
+      For all the error codes see https://www.weatherapi.com/docs/#intro-error-codes`,
+  })
   @UseGuards(AuthGuard)
   @UsePipes(new ValidationPipe())
   @HttpCode(HttpStatus.OK)
